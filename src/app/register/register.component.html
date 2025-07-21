@@ -1,35 +1,58 @@
 <div class="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="w-full max-w-md bg-white p-6 rounded-lg shadow space-y-5">
-      <h2 class="text-2xl font-bold text-center text-gray-700">Create Account</h2>
-  
-      <div>
-        <label for="name" class="block text-sm font-medium text-gray-600">Name</label>
-        <input id="name" type="text" formControlName="name" class="w-full mt-1 px-4 py-2 border rounded focus:ring-2 focus:ring-indigo-500" placeholder="Your name">
-      </div>
-  
-      <div>
-        <label for="email" class="block text-sm font-medium text-gray-600">Email</label>
-        <input id="email" type="email" formControlName="email" class="w-full mt-1 px-4 py-2 border rounded focus:ring-2 focus:ring-indigo-500" placeholder="Your email">
-      </div>
-  
-      <div>
-        <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
-        <input id="password" type="password" formControlName="password" class="w-full mt-1 px-4 py-2 border rounded focus:ring-2 focus:ring-indigo-500" placeholder="Create password">
-      </div>
-  
-      <div>
-        <label for="contactNumber" class="block text-sm font-medium text-gray-600">Contact Number</label>
-        <input id="contactNumber" type="text" formControlName="contactNumber" maxlength="10" class="w-full mt-1 px-4 py-2 border rounded focus:ring-2 focus:ring-indigo-500" placeholder="e.g. 7731898199">
-      </div>
-  
-      <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-50" [disabled]="registerForm.invalid">
-        Register
-      </button>
-  
-      <p class="text-sm text-center text-gray-600 mt-4">
-        Already have an account?
-        <a routerLink="/login" class="text-indigo-600 hover:underline font-medium">Login</a>
-      </p>
-    </form>
-  </div>
-  
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="w-full max-w-md bg-white p-6 rounded-lg shadow space-y-5">
+    <h2 class="text-2xl font-bold text-center text-gray-700">Create Account</h2>
+
+    <!-- Name -->
+    <div>
+      <label for="name" class="block text-sm font-medium text-gray-600">Name</label>
+      <input id="name" type="text" formControlName="name"
+        class="mt-1 w-full px-4 py-2 border rounded focus:ring-2 focus:ring-indigo-500"
+        placeholder="Your name" />
+      <p *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+        class="text-red-500 text-sm">Name is required.</p>
+    </div>
+
+    <!-- Email -->
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-600">Email</label>
+      <input id="email" type="email" formControlName="email"
+        class="mt-1 w-full px-4 py-2 border rounded focus:ring-2 focus:ring-indigo-500"
+        placeholder="Your email" />
+      <p *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+        class="text-red-500 text-sm">Please enter a valid email.</p>
+    </div>
+
+    <!-- Password -->
+    <div>
+      <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
+      <input id="password" type="password" formControlName="password"
+        class="mt-1 w-full px-4 py-2 border rounded focus:ring-2 focus:ring-indigo-500"
+        placeholder="Create password" />
+      <p *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+        class="text-red-500 text-sm">Password is required.</p>
+    </div>
+
+    <!-- Contact Number -->
+    <div>
+      <label for="contactNumber" class="block text-sm font-medium text-gray-600">Contact Number</label>
+      <input id="contactNumber" type="text" formControlName="contactNumber" maxlength="10"
+        class="mt-1 w-full px-4 py-2 border rounded focus:ring-2 focus:ring-indigo-500"
+        placeholder="e.g. 7731898199" />
+      <p *ngIf="registerForm.get('contactNumber')?.invalid && registerForm.get('contactNumber')?.touched"
+        class="text-red-500 text-sm">Enter a valid 10-digit number.</p>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit"
+      class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-50"
+      [disabled]="registerForm.invalid">
+      Register
+    </button>
+
+    <!-- Login Link -->
+    <p class="text-sm text-center text-gray-600 mt-4">
+      Already have an account?
+      <a routerLink="/login" class="text-indigo-600 hover:underline font-medium">Login</a>
+    </p>
+  </form>
+</div>

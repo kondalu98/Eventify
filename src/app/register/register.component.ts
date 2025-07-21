@@ -1,18 +1,20 @@
-import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
 import axios from 'axios';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.component.html'
 })
 export class RegisterComponent {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -22,16 +24,15 @@ export class RegisterComponent {
   }
 
   async onSubmit(): Promise<void> {
-    if (this.registerForm.valid) {
-      try {
-        const response = await axios.post('http://localhost:8082/api/users/register', this.registerForm.value, {
-          headers: { 'Content-Type': 'application/json' }
-        });
-        alert(`Welcome, ${response.data.name}!`);
-      } catch (error) {
-        alert('Registration failed. Please try again.');
-        console.error('Register error:', error);
-      }
+    if (this.registerForm.invalid) return;
+
+    try {
+      const response = await axios.post('http://localhost:8082/api/users/register', this.registerForm.value);
+      alert('Registered Successfully!');
+      this.router.navigate(['/login']); 
+    } catch (error) {
+      console.error('Error during registration:', error);
+      alert('Registration failed.');
     }
   }
 }

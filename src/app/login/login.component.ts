@@ -1,14 +1,17 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import axios from 'axios';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
-    CommonModule
+    RouterModule
   ],
   templateUrl: './login.component.html'
 })
@@ -23,15 +26,17 @@ export class LoginComponent {
   }
 
   async onSubmit(): Promise<void> {
-    if (this.loginForm.valid) {
-      try {
-        const response = await axios.post('http://localhost:8082/api/users/login', this.loginForm.value);
-        const { email, token } = response.data;
-        alert(`Welcome ${email}!\nYour token: ${token}`);
-      } catch (error) {
-        alert('Login failed. Please check your credentials.');
-        console.error('Login error:', error);
-      }
+    if (this.loginForm.invalid) return;
+
+    try {
+      const response = await axios.post('http://localhost:8082/api/users/login', this.loginForm.value);
+      const { email, token } = response.data;
+      alert(`Welcome ${email}!\nYour token: ${token}`);
+
+      localStorage.setItem('token', token);
+    } catch (error: any) {
+      console.error('Login error:', error);
+      alert('Login failed. Please check your credentials.');
     }
   }
 }

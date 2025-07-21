@@ -1,50 +1,68 @@
 <nav class="bg-gray-800 p-4 shadow-lg">
-    <div class="container mx-auto flex justify-between items-center flex-wrap">
-  
-      <a href="/" class="text-white text-2xl font-bold mr-4 mb-2 md:mb-0">
-        Eventify
-      </a>
-  
-      <div class="md:hidden flex items-center">
-        <button (click)="toggleMobileMenu()" class="text-gray-300 hover:text-white focus:outline-none focus:text-white">
-          <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path *ngIf="!isMobileMenuOpen" fill-rule="evenodd" clip-rule="evenodd" d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"/>
-            <path *ngIf="isMobileMenuOpen" fill-rule="evenodd" clip-rule="evenodd" d="M18.278 16.864a1 1 0 0 1-1.414 1.414L12 13.414l-4.864 4.864a1 1 0 0 1-1.414-1.414L10.586 12 5.722 7.136a1 1 0 0 1 1.414-1.414L12 10.586l4.864-4.864a1 1 0 0 1 1.414 1.414L13.414 12l4.864 4.864z"/>
-          </svg>
-        </button>
+  <div class="container mx-auto flex flex-wrap items-center justify-between">
+
+    <!-- Logo -->
+    <a href="/" class="text-white text-2xl font-bold mb-2 md:mb-0">
+      Eventify
+    </a>
+
+    
+    <button
+      (click)="toggleMobileMenu()"
+      class="md:hidden text-gray-300 hover:text-white focus:outline-none"
+    >
+      <svg *ngIf="!isMobileMenuOpen" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z" />
+      </svg>
+      <svg *ngIf="isMobileMenuOpen" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Menu Items -->
+    <div
+      [ngClass]="{
+        'hidden': !isMobileMenuOpen,
+        'flex flex-col mt-4 w-full': isMobileMenuOpen,
+        'md:flex md:flex-row md:items-center md:space-x-4 md:mt-0': true
+      }"
+    >
+      <!-- Search -->
+      <div class="relative mb-3 md:mb-0 md:w-64">
+        <input
+          type="text"
+          placeholder="Search..."
+          class="w-full bg-gray-700 text-white rounded-md py-2 px-4 pl-10 focus:ring-2 focus:ring-blue-500"
+        />
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
       </div>
-  
-      <div
-        [ngClass]="{'hidden': !isMobileMenuOpen, 'flex': isMobileMenuOpen}"
-        class="w-full md:flex md:items-center md:w-auto mt-4 md:mt-0"
+
+      <!-- Location -->
+      <div class="relative mb-3 md:mb-0 md:w-64">
+        <input
+          type="text"
+          placeholder="Location"
+          class="w-full bg-gray-700 text-white rounded-md py-2 px-4 pl-10 focus:ring-2 focus:ring-blue-500"
+        />
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM12 11a2 2 0 100-4 2 2 0 000 4z" />
+        </svg>
+      </div>
+
+      <!-- Login Button -->
+      <button
+        type="button"
+        (click)="navigateToLogin()"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md w-full md:w-auto"
       >
-        <div class="flex flex-col md:flex-row md:ml-auto">
-          <div class="relative mb-3 md:mb-0 md:mr-4 w-full">
-            <input
-              type="text"
-              placeholder="Search..."
-              class="w-full bg-gray-700 text-white rounded-md py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          </div>
-  
-          <div class="relative mb-3 md:mb-0 md:mr-4 w-full">
-            <input
-              type="text"
-              placeholder="Location"
-              class="w-full bg-gray-700 text-white rounded-md py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.727A8 8 0 016.343 5.273L12 1.996l5.657 3.277c.489.282.887.679 1.169 1.168.282.489.438 1.02.438 1.564 0 .544-.156 1.075-.438 1.564A8 8 0 0117.657 16.727zM12 13a3 3 0 100-6 3 3 0 000 6z"></path></svg>
-          </div>
-          <button 
-          type="button" 
-          (click)="navigateToLogin()"
-          routerLinkActive="font-semibold" 
-          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md w-full md:w-auto">
-          Login
-        </button>
-        
-        </div>
-      </div>
+        Login
+      </button>
     </div>
-  </nav>
+  </div>
+</nav>
