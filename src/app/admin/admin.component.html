@@ -1,0 +1,60 @@
+<app-navbar></app-navbar>
+
+<div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 px-4 ">
+  <form
+    [formGroup]="adminForm"
+    (ngSubmit)="onSubmit()"
+    class="w-full  max-w-md bg-white p-8 rounded-2xl shadow-xl border border-gray-200 space-y-6 transition-all duration-300"
+  >
+    <h2 class="text-3xl font-extrabold text-center text-indigo-700 mb-2">
+      Admin Login
+    </h2>
+    <p class="text-sm text-center text-gray-500 mb-6">
+      Please enter your credentials to access the admin dashboard.
+    </p>
+
+    <!-- Email Field -->
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+        placeholder="admin@example.com"
+      />
+      <p *ngIf="adminForm.get('email')?.invalid && adminForm.get('email')?.touched" class="text-red-500 text-xs mt-1">
+        Please enter a valid email address.
+      </p>
+    </div>
+
+    <!-- Password Field -->
+    <div>
+      <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+        placeholder="••••••••"
+      />
+      <p *ngIf="adminForm.get('password')?.invalid && adminForm.get('password')?.touched" class="text-red-500 text-xs mt-1">
+        Password is required.
+      </p>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      [disabled]="adminForm.invalid"
+      class="w-full bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-400 transition disabled:opacity-50"
+    >
+      🔐 Login
+    </button>
+
+    <!-- Optional: Footer Text -->
+    <p class="text-center text-xs text-gray-400 mt-4">
+      © 2025 Admin Panel. All rights reserved.
+    </p>
+  </form>
+</div>

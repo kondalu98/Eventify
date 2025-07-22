@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import axios from 'axios';
+import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
   selector: 'app-login',
@@ -11,8 +12,9 @@ import axios from 'axios';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule
-  ],
+    RouterModule,
+   NavbarComponent
+],
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
@@ -33,7 +35,7 @@ export class LoginComponent {
       const { email, token } = response.data;
       alert(`Welcome ${email}!\nYour token: ${token}`);
 
-      localStorage.setItem('token', token);
+      // localStorage.setItem('token', token);
     } catch (error: any) {
       console.error('Login error:', error);
       alert('Login failed. Please check your credentials.');

@@ -20,5 +20,9 @@ export class NavbarComponent {
 navigateToLogin() {
   this.router.navigate(['/login']);
 }
+navigateToAdmin()
+{
+  this.router.navigate(['/admin']);
+}
 
 }
