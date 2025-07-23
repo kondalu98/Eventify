@@ -1,0 +1,13 @@
+<div *ngIf="event" class="max-w-3xl mx-auto px-4 py-8 bg-white shadow-md rounded">
+    <h2 class="text-3xl font-bold mb-4">{{ event.name }}</h2>
+    <img [src]="event.imageUrl || 'assets/ev_2.jpg'" class="w-full h-64 object-cover rounded mb-4" />
+    <p class="text-gray-700"><strong>Category:</strong> {{ event.category }}</p>
+    <p class="text-gray-700"><strong>Location:</strong> {{ event.location }}</p>
+    <p class="text-gray-700"><strong>Date:</strong> {{ event.date }}</p>
+    <p class="text-gray-700"><strong>Organizer:</strong> {{ event.organizerID }}</p>
+    
+    <button (click)="validateTicket()" class="mt-6 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+      🎟️ Book Ticket
+    </button>
+  </div>
+  

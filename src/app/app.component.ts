@@ -17,14 +17,14 @@ import { filter } from 'rxjs/operators';
 })
 export class AppComponent {
   title = 'eventify';
-  isAuthRoute = false;
+  isHomeRoute = false;
 
   constructor(private router: Router) {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        const authRoutes = ['/login', '/register','/admin','/admin/dash'];
-        this.isAuthRoute = authRoutes.includes(event.urlAfterRedirects);
+        const homeRoutes = ['/', '/home'];  // Update this list as needed
+        this.isHomeRoute = homeRoutes.includes(event.urlAfterRedirects);
       });
   }
   @ViewChild('eventList') eventList!: EventsComponent;
@@ -32,4 +32,9 @@ export class AppComponent {
   onLocationSelected(location: string) {
     this.eventList.loadEventsByLocation(location);
   }
+ 
+  
+
+  
+
 }

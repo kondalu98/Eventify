@@ -6,11 +6,8 @@
       Eventify
     </a>
 
-
-    <button
-      (click)="toggleMobileMenu()"
-      class="md:hidden text-gray-300 hover:text-white focus:outline-none"
-    >
+    <!-- Mobile Toggle -->
+    <button (click)="toggleMobileMenu()" class="md:hidden text-gray-300 hover:text-white focus:outline-none">
       <svg *ngIf="!isMobileMenuOpen" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z" />
       </svg>
@@ -19,18 +16,21 @@
       </svg>
     </button>
 
-    <!-- Menu Items -->
+    <!-- Navigation Items -->
     <div
       [ngClass]="{
         'hidden': !isMobileMenuOpen,
         'flex flex-col mt-4 w-full': isMobileMenuOpen,
         'md:flex md:flex-row md:items-center md:space-x-4 md:mt-0': true
       }"
+      class="md:flex md:flex-row md:items-center md:space-x-6"
     >
-      <!-- Search -->
+      <!-- Search Input -->
       <div class="relative mb-3 md:mb-0 md:w-64">
         <input
           type="text"
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
           placeholder="Search..."
           class="w-full bg-gray-700 text-white rounded-md py-2 px-4 pl-10 focus:ring-2 focus:ring-blue-500"
         />
@@ -39,39 +39,66 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
+
+        <!-- Suggestions -->
+        <ul *ngIf="searchResults.length > 0"
+          class="absolute z-10 w-full bg-white border rounded-md mt-1 shadow-lg max-h-60 overflow-auto">
+          <li
+            *ngFor="let event of searchResults"
+            (click)="goToEventDetail(event)"
+            class="px-4 py-2 hover:bg-gray-200 cursor-pointer">
+            <span class="font-semibold">{{ event.name }}</span> -
+            <span class="text-gray-500 text-sm">{{ event.location }}</span>
+          </li>
+        </ul>
       </div>
 
-     <div class="relative mb-3 md:mb-0 md:w-64">
-  <select
-    (change)="onLocationChange($event)"
-    class="w-full bg-gray-700 text-white rounded-md py-2 px-4 pl-10 focus:ring-2 focus:ring-blue-500 appearance-none"
-  >
-    <option value="">All Locations</option>
-    <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
-  </select>
+      <!-- Location Dropdown -->
+      <div class="relative mb-3 md:mb-0 md:w-48">
+        <select
+          (change)="onLocationChange($event)"
+          class="w-full bg-gray-700 text-white rounded-md py-2 px-4 focus:ring-2 focus:ring-blue-500 appearance-none"
+        >
+          <option value="">All Locations</option>
+          <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
+        </select>
+      </div>
 
-  <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5 pointer-events-none" fill="none" stroke="currentColor"
-    viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM12 11a2 2 0 100-4 2 2 0 000 4z" />
-  </svg>
-</div>
-      <!-- Login Button -->
-      <button
-        type="button"
-        (click)="navigateToLogin()"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md w-full md:w-auto"
-      >
-        Login
-      </button>
+      <!-- Logged-in User Avatar/Profile -->
+      <div *ngIf="user; else notLoggedIn" class="flex items-center space-x-4">
+        <div
+          class="bg-blue-500 text-white rounded-full w-9 h-9 flex items-center justify-center font-bold uppercase"
+          title="{{ user.name }}"
+        >
+          {{ user.name?.charAt(0) || '?' }}
+        </div>
+        <button
+          class="text-white hover:underline"
+          (click)="goToProfile()"
+        >Profile</button>
+        <button
+          class="text-white hover:underline"
+          (click)="logout()"
+        >Logout</button>
+      </div>
 
-      <button
-        type="button"
-        (click)="navigateToAdmin()"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md w-full md:w-auto"
-      >
-        Admin
-      </button>
+      <!-- Guest buttons -->
+      <ng-template #notLoggedIn>
+        <button
+          type="button"
+          (click)="navigateToLogin()"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md"
+        >
+          Login
+        </button>
+        <button
+          type="button"
+          (click)="navigateToAdmin()"
+          class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md"
+        >
+          Admin
+        </button>
+      </ng-template>
     </div>
   </div>
 </nav>

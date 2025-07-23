@@ -43,12 +43,18 @@
         class="text-red-500 text-sm">Enter a valid 10-digit number.</p>
     </div>
 
-    <!-- Submit Button -->
-    <button type="submit"
-      class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-50"
-      [disabled]="registerForm.invalid">
-      Register
-    </button>
+    <!-- Server-side error message -->
+<div *ngIf="serverError" class="text-red-600 text-sm text-center">
+  {{ serverError }}
+</div>
+
+<!-- Submit Button -->
+<button type="submit"
+  class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-50"
+  [disabled]="registerForm.invalid">
+  Register
+</button>
+
 
     <!-- Login Link -->
     <p class="text-sm text-center text-gray-600 mt-4">

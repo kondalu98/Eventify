@@ -1,8 +1,10 @@
-<ng-container *ngIf="!isAuthRoute">
-    <app-navbar (locationSelected)="onLocationSelected($event)"></app-navbar>
-    <app-carousel></app-carousel>
-    <app-events #eventList></app-events>
-  </ng-container>
+<ng-container *ngIf="isHomeRoute">
+  <app-navbar (locationSelected)="onLocationSelected($event)"
+  
+></app-navbar>
+  <app-carousel></app-carousel>
+  <app-events #eventList></app-events>
+</ng-container>
 
-  <router-outlet></router-outlet>
+<router-outlet></router-outlet>
 

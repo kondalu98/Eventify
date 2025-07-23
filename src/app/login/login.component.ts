@@ -1,44 +1,66 @@
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import axios from 'axios';
+import { Component, inject } from "@angular/core";
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from "@angular/forms";
+import axios from "axios";
 import { NavbarComponent } from "../navbar/navbar.component";
+import { CommonModule } from "@angular/common";
+import { AuthService } from '../auth.service';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-   NavbarComponent
-],
-  templateUrl: './login.component.html'
+  imports: [NavbarComponent, ReactiveFormsModule, CommonModule],
+  templateUrl: './login.component.html',
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  errorMessage: string = '';
+  successMessage: string = '';
 
-  constructor(private fb: FormBuilder) {
+  // ✅ Inject here
+
+
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService, // ✅ inject properly
+    private router: Router            // ✅ inject router
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
   }
+  
 
   async onSubmit(): Promise<void> {
+    this.errorMessage = '';
+    this.successMessage = '';
+
     if (this.loginForm.invalid) return;
 
     try {
       const response = await axios.post('http://localhost:8082/api/users/login', this.loginForm.value);
-      const { email, token } = response.data;
-      alert(`Welcome ${email}!\nYour token: ${token}`);
+      const { id,email,name ,token} = response.data;
 
-      // localStorage.setItem('token', token);
+      console.log(response.data);
+      this.successMessage = `Welcome ${name}! You have logged in successfully.`;
+
+// Save token and user info
+localStorage.setItem('user', JSON.stringify(response.data));
+this.authService.setUser({ id,name, email });
+
+// Wait 1.5 seconds before navigating
+setTimeout(() => {
+  this.router.navigate(['/']);
+}, 1500);
+
+
+      localStorage.setItem('user', JSON.stringify(response.data));
+
+      await this.router.navigate(['/']);
     } catch (error: any) {
       console.error('Login error:', error);
-      alert('Login failed. Please check your credentials.');
+      this.errorMessage = 'Invalid email or password.';
     }
   }
 }

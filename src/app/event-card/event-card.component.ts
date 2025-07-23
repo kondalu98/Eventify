@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-events',
@@ -10,15 +11,17 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './event-card.component.html',
 })
 export class EventsComponent implements OnInit {
+  
+
   events: any[] = [];
   imageUrls: string[] = [
-    'assets/event_1.jpg',
-    'assets/event_2.jpg',
-    'assets/event_3.jpg',
-    'assets/event_1.jpg'
+    'assets/ev_1.webp',
+    'assets/ev_2.jpg',
+    'assets/ev_3.jpg',
+   
 
   ];
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
     this.loadAllEvents();
@@ -43,12 +46,26 @@ export class EventsComponent implements OnInit {
       });
   }
 
+  // assignImages(events: any[]) {
+  //   return events.map((event, index) => ({
+  //     ...event,
+  //     imageUrl: this.imageUrls[index % this.imageUrls.length]
+  //   }));
+  // }
+
   assignImages(events: any[]) {
     return events.map((event, index) => ({
       ...event,
-      imageUrl: this.imageUrls[index % this.imageUrls.length]
+      imageUrl: event.imageUrl || this.imageUrls[index % this.imageUrls.length]
     }));
   }
+  goToEventDetail(event: any) {
+   
+    this.router.navigate(['/event', event.eventID]);
+  }
+  
+  
+  
 }
 
 
