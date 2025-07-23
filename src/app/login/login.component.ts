@@ -1,10 +1,16 @@
-import { Component, inject } from "@angular/core";
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from "@angular/forms";
-import axios from "axios";
-import { NavbarComponent } from "../navbar/navbar.component";
-import { CommonModule } from "@angular/common";
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
 import { AuthService } from '../auth.service';
-import { Router } from "@angular/router";
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { Router } from '@angular/router';
+import axios from 'axios';
 
 @Component({
   selector: 'app-login',
@@ -17,20 +23,16 @@ export class LoginComponent {
   errorMessage: string = '';
   successMessage: string = '';
 
-  // ✅ Inject here
-
-
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService, // ✅ inject properly
-    private router: Router            // ✅ inject router
+    private authService: AuthService,
+    private router: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
   }
-  
 
   async onSubmit(): Promise<void> {
     this.errorMessage = '';
@@ -39,21 +41,23 @@ export class LoginComponent {
     if (this.loginForm.invalid) return;
 
     try {
-      const response = await axios.post('http://localhost:8082/api/users/login', this.loginForm.value);
-      const { id,email,name ,token} = response.data;
+      const response = await axios.post(
+        'http://localhost:8082/api/users/login',
+        this.loginForm.value
+      );
+      const { id, email, name, token } = response.data;
 
       console.log(response.data);
       this.successMessage = `Welcome ${name}! You have logged in successfully.`;
 
-// Save token and user info
-localStorage.setItem('user', JSON.stringify(response.data));
-this.authService.setUser({ id,name, email });
 
-// Wait 1.5 seconds before navigating
-setTimeout(() => {
-  this.router.navigate(['/']);
-}, 1500);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      this.authService.setUser({ id, name, email });
 
+
+      setTimeout(() => {
+        this.router.navigate(['/']);
+      }, 1500);
 
       localStorage.setItem('user', JSON.stringify(response.data));
 

@@ -1,33 +1,71 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-event-detail',
-  standalone:true,
-  imports:[CommonModule],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './event-details.component.html',
- 
 })
 export class EventDetailComponent implements OnInit {
   event: any;
+  ticketBooked = false;
+  ticketId: number | null = null;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private router: Router,
+    private location: Location
+  ) {}
 
-  
   ngOnInit(): void {
     const eventId = this.route.snapshot.paramMap.get('id');
-    console.log(eventId);
     if (eventId) {
       this.http.get(`http://localhost:8082/api/events/${eventId}`)
-        .subscribe(data => {
+        .subscribe((data) => {
           this.event = data;
         });
     }
   }
 
-  validateTicket() {
-    alert('Ticket validated!');
+ validateTicket() {
+  const storedUser = localStorage.getItem('user');
+  if (!storedUser) {
+    this.router.navigate(['/login']);
+    return;
+  }
+
+  const { id: userId, token } = JSON.parse(storedUser);
+  const eventId = this.event?.eventID;
+
+  if (!eventId || !userId) return;
+
+  const bookingData = { userId, eventId };
+  const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+
+  this.http.post<any>('http://localhost:8082/api/tickets/book', bookingData, { headers })
+    .subscribe({
+      next: (response) => {
+        this.ticketBooked = true;
+        this.ticketId = response.ticketId;
+      },
+      error: (err) => {
+        console.error('Booking failed', err);
+        alert('❌ Booking failed. Please try again.');
+      },
+    });
+}
+
+  goToLocationPage() {
+    this.location.back();
+  }
+
+  goToProfile() {
+    this.router.navigate(['/profile']);
   }
 }

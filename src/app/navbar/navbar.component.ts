@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+
+import { AuthService } from '../auth.service'; // 👈 import service
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AuthService } from '../auth.service'; // 👈 import service
 
 @Component({
   selector: 'app-navbar',
@@ -24,7 +25,7 @@ export class NavbarComponent implements OnInit {
 
   user: any = null;
 
-  
+
   constructor(
     private router: Router,
     private http: HttpClient,
@@ -83,7 +84,7 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
-  
+
 }
