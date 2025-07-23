@@ -6,7 +6,7 @@
       Eventify
     </a>
 
-    
+
     <button
       (click)="toggleMobileMenu()"
       class="md:hidden text-gray-300 hover:text-white focus:outline-none"
@@ -41,20 +41,21 @@
         </svg>
       </div>
 
-      <!-- Location -->
-      <div class="relative mb-3 md:mb-0 md:w-64">
-        <input
-          type="text"
-          placeholder="Location"
-          class="w-full bg-gray-700 text-white rounded-md py-2 px-4 pl-10 focus:ring-2 focus:ring-blue-500"
-        />
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" fill="none" stroke="currentColor"
-          viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM12 11a2 2 0 100-4 2 2 0 000 4z" />
-        </svg>
-      </div>
+     <div class="relative mb-3 md:mb-0 md:w-64">
+  <select
+    (change)="onLocationChange($event)"
+    class="w-full bg-gray-700 text-white rounded-md py-2 px-4 pl-10 focus:ring-2 focus:ring-blue-500 appearance-none"
+  >
+    <option value="">All Locations</option>
+    <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
+  </select>
 
+  <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5 pointer-events-none" fill="none" stroke="currentColor"
+    viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM12 11a2 2 0 100-4 2 2 0 000 4z" />
+  </svg>
+</div>
       <!-- Login Button -->
       <button
         type="button"

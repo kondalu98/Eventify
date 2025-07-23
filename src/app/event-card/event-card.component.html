@@ -1,0 +1,21 @@
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <h2 class="text-2xl font-bold mb-6">Recommended Events</h2>
+
+  <div class="flex gap-6 overflow-x-auto pb-4">
+    <div *ngFor="let event of events" class="w-64 bg-white rounded-lg shadow hover:shadow-lg transition duration-300">
+     <img [src]="event.imageUrl"
+     alt="event image"
+     class="w-full h-96 object-cover rounded-t-lg" />
+
+      <div class="p-4">
+        <h3 class="text-lg font-semibold truncate">{{ event.name }}</h3>
+        <p class="text-sm text-gray-500">{{ event.category }} | {{ event.location }}</p>
+        <p class="text-sm text-gray-400 mt-1">📅 {{ event.date }}</p>
+
+        <div class="mt-2 text-xs text-gray-600">
+          Organizer: <span class="font-semibold">{{ event.organizerID }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

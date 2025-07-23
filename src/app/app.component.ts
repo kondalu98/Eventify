@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 
-import { RouterOutlet } from '@angular/router';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
 import { CarouselComponent } from './carousel/carousel.component';
-import { NavbarComponent } from './navbar/navbar.component';
 import { CommonModule } from '@angular/common';
+import { EventsComponent } from './event-card/event-card.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet ,CarouselComponent,NavbarComponent,CommonModule],
+  imports: [RouterOutlet ,CarouselComponent,NavbarComponent,CommonModule,EventsComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -25,5 +26,10 @@ export class AppComponent {
         const authRoutes = ['/login', '/register','/admin','/admin/dash'];
         this.isAuthRoute = authRoutes.includes(event.urlAfterRedirects);
       });
+  }
+  @ViewChild('eventList') eventList!: EventsComponent;
+
+  onLocationSelected(location: string) {
+    this.eventList.loadEventsByLocation(location);
   }
 }

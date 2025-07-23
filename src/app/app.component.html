@@ -1,7 +1,8 @@
 <ng-container *ngIf="!isAuthRoute">
-    <app-navbar></app-navbar>
+    <app-navbar (locationSelected)="onLocationSelected($event)"></app-navbar>
     <app-carousel></app-carousel>
+    <app-events #eventList></app-events>
   </ng-container>
-  
+
   <router-outlet></router-outlet>
-  
+
