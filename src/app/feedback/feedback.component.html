@@ -1,0 +1,39 @@
+<div class="mt-6 bg-gray-100 p-4 rounded shadow">
+    <h3 class="text-lg font-semibold mb-2">📝 Submit your Feedback</h3>
+  
+    <form [formGroup]="feedbackForm" (ngSubmit)="submitFeedback()">
+      <!-- Rating -->
+      <label class="block mb-2">
+        Rating (1–5):
+        <input
+          type="number"
+          formControlName="rating"
+          class="w-full px-3 py-2 border rounded"
+          min="1"
+          max="5"
+          required
+        />
+      </label>
+  
+      <!-- Comment -->
+      <label class="block mb-2">
+        Comment:
+        <textarea
+          formControlName="comment"
+          class="w-full px-3 py-2 border rounded"
+          rows="4"
+          required
+        ></textarea>
+      </label>
+  
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="feedbackForm.invalid"
+        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+      >
+        Submit Feedback
+      </button>
+    </form>
+  </div>
+  

@@ -84,5 +84,9 @@ constructor(private fb: FormBuilder, private router: Router, private location: L
 goBack() {
   this.location.back();
 }
+onclick()
+{
+  this.router.navigate(['/tickets']);
+}
 
 }

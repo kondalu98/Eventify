@@ -118,4 +118,8 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/admin']); 
     localStorage.removeItem('admin-token');
   }
+  onClick()
+  {
+    this.router.navigate(['admin/tickets'])
+  }
 }
