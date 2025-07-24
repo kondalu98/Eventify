@@ -18,7 +18,11 @@ export class AuthService {
     this.userSubject.next(user);
     localStorage.setItem('user', JSON.stringify(user));
   }
-  
+  getUser() {
+  const userStr = localStorage.getItem('user'); // assuming user is stored in localStorage
+  return userStr ? JSON.parse(userStr) : null;
+}
+
   login(response: any) {
     localStorage.setItem('token', response.token);
     localStorage.setItem('user', JSON.stringify({
@@ -27,7 +31,7 @@ export class AuthService {
       email: response.email
     }));
   }
-  
+
 
   updateUser(updatedUser: any) {
     this.userSubject.next(updatedUser);

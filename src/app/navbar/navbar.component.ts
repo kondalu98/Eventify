@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { AuthService } from '../auth.service'; // 👈 import service
+import { AuthService } from '../auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
@@ -25,11 +25,13 @@ export class NavbarComponent implements OnInit {
 
   user: any = null;
 
+  notifications: any[] = [];
+  isNotificationDropdownOpen = false;
 
   constructor(
     private router: Router,
     private http: HttpClient,
-    private authService: AuthService // 👈 inject
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -87,4 +89,52 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+
+
+
+
+
+  // Notifications
+  toggleNotificationDropdown() {
+  this.isNotificationDropdownOpen = !this.isNotificationDropdownOpen;
+
+  if (this.isNotificationDropdownOpen && this.user?.id) {
+    this.fetchNotifications(this.user.id);
+
+    // Clear notifications after showing (simulate read)
+    setTimeout(() => {
+      this.notifications = [];
+    }, 3000); // Adjust if needed
+  }
 }
+
+  fetchNotifications(id?: any): void {
+    const user = this.authService.getUser(); // Get user from service
+    const token = user?.token;
+
+    if (!token) {
+      console.warn('No token found');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http
+      .get<any[]>(`http://localhost:8082/api/notifications/alerts/${user.id}`, {
+        headers,
+      })
+      .subscribe({
+        next: (data) => {
+          this.notifications = data;
+          console.log('Notifications:', data);
+        },
+        error: (error) => {
+          console.error('Failed to load notifications', error);
+        },
+      });
+  }
+}
+
+
