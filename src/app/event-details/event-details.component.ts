@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Location } from '@angular/common';
+
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { EventFeedbacksComponent } from '../event-feedbacks/event-feedbacks.component';
 import { FeedbackFormComponent } from '../feedback/feedback.component';
+import { FormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-event-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, FeedbackFormComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, FeedbackFormComponent,EventFeedbacksComponent],
   templateUrl: './event-details.component.html',
 })
 export class EventDetailComponent implements OnInit {

@@ -1,0 +1,21 @@
+<div class="mt-6">
+  <h3 class="text-xl font-semibold mb-2">🗣️ Event Feedbacks</h3>
+
+  <div *ngIf="loading" class="text-gray-500">Loading feedbacks...</div>
+  <div *ngIf="error" class="text-red-600">{{ error }}</div>
+
+  <ul *ngIf="!loading && feedbacks.length > 0" class="space-y-4">
+    <li *ngFor="let feedback of feedbacks" class="bg-white p-4 shadow rounded">
+      <div class="flex items-center justify-between">
+        <div class="text-sm font-bold text-gray-800">{{ feedback.user.name }}</div>
+        <div class="text-yellow-500 font-medium">⭐ {{ feedback.rating }}/5</div>
+      </div>
+      <p class="text-gray-600 mt-1">{{ feedback.comments }}</p>
+      <p class="text-xs text-gray-400 mt-1">
+        Submitted on {{ feedback.submittedTimestamp | date: 'medium' }}
+      </p>
+    </li>
+  </ul>
+
+  <div *ngIf="!loading && feedbacks.length === 0" class="text-gray-500">No feedbacks yet.</div>
+</div>
