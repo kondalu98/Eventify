@@ -122,4 +122,8 @@ export class DashboardComponent implements OnInit {
   {
     this.router.navigate(['admin/tickets'])
   }
+  notify()
+  {
+    this.router.navigate(['/notify'])
+  }
 }

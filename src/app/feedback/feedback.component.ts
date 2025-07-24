@@ -24,15 +24,22 @@ export class FeedbackFormComponent {
   }
 
   submitFeedback() {
+    console.log('Submitting feedback...');
     const storedUser = localStorage.getItem('user');
     if (!storedUser) return;
 
     const { token } = JSON.parse(storedUser);
-    const url = `http://localhost:8082/api/feedback?userId=${this.userId}&eventId=${this.eventId}&rating=${this.feedbackForm.value.rating}&comments=${encodeURIComponent(this.feedbackForm.value.comment)}`;
+    const { rating, comment } = this.feedbackForm.value;
 
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const url = `http://localhost:8082/api/feedback?userId=${this.userId}&eventId=${this.eventId}&rating=${rating}&comments=${encodeURIComponent(
+      comment
+    )}`;
 
-    this.http.get(url, { headers }).subscribe({
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http.post(url, null, { headers }).subscribe({
       next: () => {
         alert('✅ Feedback submitted!');
         this.feedbackForm.reset();

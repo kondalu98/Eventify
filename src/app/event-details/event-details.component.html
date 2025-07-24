@@ -1,5 +1,4 @@
 <div *ngIf="event" class="max-w-3xl mx-auto px-4 py-8">
-  <!-- Event Card Layout -->
   <div class="w-full bg-white rounded-lg shadow hover:shadow-lg transition duration-300">
     <img
       [src]="event.imageUrl || 'assets/ev_2.jpg'"
@@ -15,7 +14,7 @@
         Organizer: <span class="font-semibold">{{ event.organizerID }}</span>
       </div>
 
-      <!-- Book Ticket Button -->
+      <!-- Buttons -->
       <button
         *ngIf="!ticketBooked"
         (click)="validateTicket()"
@@ -24,31 +23,32 @@
         🎟️ Book Ticket
       </button>
 
+      <button
+        (click)="validateRate()"
+        class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+      >
+        ⭐ Rate Now
+      </button>
 
+      <!-- Feedback Form -->
+      <app-feedback-form
+        *ngIf="showFeedbackForm && userId !== null"
+        [eventId]="event?.eventID"
+        [userId]="userId!"
+        (feedbackSubmitted)="showFeedbackForm = false"
+      ></app-feedback-form>
 
-      
-      <!-- Cancel Ticket Button -->
-     <!-- Cancel Ticket Button -->
+      <!-- Ticket Booked Message -->
+      <div *ngIf="ticketBooked" class="mt-4 text-green-700 font-semibold">
+        🎫 Ticket booked successfully! Ticket ID: <span class="text-black">{{ ticketId }}</span>
+      </div>
 
-
-<!-- Ticket Booked Message -->
-<div *ngIf="ticketBooked" class="mt-4 text-green-700 font-semibold">
-  🎫 Ticket booked successfully! Ticket ID: <span class="text-black">{{ ticketId }}</span>
-</div>
-
-      <!-- Back & Profile Buttons -->
+      <!-- Back and Profile -->
       <div class="mt-6 flex flex-wrap gap-4">
-        <button
-          (click)="goToLocationPage()"
-          class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-        >
+        <button (click)="goToLocationPage()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
           ⬅️ Back to Location
         </button>
-
-        <button
-          (click)="goToProfile()"
-          class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-        >
+        <button (click)="goToProfile()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
           👤 Go to Profile
         </button>
       </div>

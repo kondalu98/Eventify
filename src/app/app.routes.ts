@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AdminTicketsComponent } from './admin-tickets/admin-tickets.component';
+import { NotificationComponent } from './notification/notification.component';
 
 export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./login/login.component').then(m => m.LoginComponent) },
@@ -13,5 +14,9 @@ export const routes: Routes = [
     loadComponent: () => import('./ticket/ticket.component').then(m => m.TicketsComponent)
   },{
     path: 'admin/tickets',
-    component: AdminTicketsComponent,}
+    component: AdminTicketsComponent,},
+    {
+      path:'notify',
+      component:NotificationComponent
+    }
 ];
