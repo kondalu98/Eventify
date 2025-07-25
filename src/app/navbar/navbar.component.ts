@@ -96,45 +96,59 @@ export class NavbarComponent implements OnInit {
 
   // Notifications
   toggleNotificationDropdown() {
-  this.isNotificationDropdownOpen = !this.isNotificationDropdownOpen;
-
-  if (this.isNotificationDropdownOpen && this.user?.id) {
-    this.fetchNotifications(this.user.id);
-
-    // Clear notifications after showing (simulate read)
-    setTimeout(() => {
-      this.notifications = [];
-    }, 3000); // Adjust if needed
+    this.isNotificationDropdownOpen = !this.isNotificationDropdownOpen;
+  
+    if (this.isNotificationDropdownOpen) {
+      this.fetchNotifications(); // ✅ No parameter needed
+    }
   }
+  
+
+fetchNotifications(): void {
+  const user = this.authService.getUser(); // Get user from service
+  const token = user?.token;
+
+  if (!token) {
+    console.warn('No token found');
+    return;
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  this.http
+    .get<any[]>(`http://localhost:8082/api/notifications/alerts/${user.id}`, {
+      headers,
+    })
+    .subscribe({
+      next: (data) => {
+        // Sort by sentTimestamp descending and take latest 4
+        this.notifications = data
+          .sort((a, b) => new Date(b.sentTimestamp).getTime() - new Date(a.sentTimestamp).getTime())
+          .slice(0, 4);
+
+        console.log('Latest 4 Notifications:', this.notifications);
+      },
+      error: (error) => {
+        console.error('Failed to load notifications', error);
+      },
+    });
 }
 
-  fetchNotifications(id?: any): void {
-    const user = this.authService.getUser(); // Get user from service
-    const token = user?.token;
-
-    if (!token) {
-      console.warn('No token found');
-      return;
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
-    this.http
-      .get<any[]>(`http://localhost:8082/api/notifications/alerts/${user.id}`, {
-        headers,
-      })
-      .subscribe({
-        next: (data) => {
-          this.notifications = data;
-          console.log('Notifications:', data);
-        },
-        error: (error) => {
-          console.error('Failed to load notifications', error);
-        },
-      });
+  getRelativeTime(dateString: string): string {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
+  
+    if (diff < 60) return `${diff} sec ago`;
+    if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} hrs ago`;
+    if (diff < 2592000) return `${Math.floor(diff / 86400)} days ago`;
+  
+    return date.toLocaleDateString();
   }
+  
 }
 
 

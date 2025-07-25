@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './event-card.component.html',
 })
 export class EventsComponent implements OnInit {
@@ -77,4 +78,41 @@ export class EventsComponent implements OnInit {
   goToEventDetail(event: any) {
     this.router.navigate(['/event', event.eventID]);
   }
+  selectedDate: string = '';
+
+  onDateChange() {
+    if (!this.selectedDate) {
+      this.loadAllEvents(); // Reset
+      return;
+    }
+  
+    this.http.get<any[]>(`http://localhost:8082/api/events/date?date=${this.selectedDate}`)
+      .subscribe(events => {
+        if (!events || events.length === 0) {
+          this.events = [];
+          return;
+        }
+  
+        const eventsWithImages = this.assignImages(events);
+        const ratingRequests = eventsWithImages.map(event =>
+          this.http.get<number>(`http://localhost:8082/api/feedback/event-rating/${event.eventID}`)
+        );
+  
+        forkJoin(ratingRequests).subscribe(ratings => {
+          this.events = eventsWithImages.map((event, index) => ({
+            ...event,
+            rating: ratings[index] ?? 0
+          }));
+        });
+      }, error => {
+        console.error('Error fetching events for date:', error);
+        this.events = [];
+      });
+  }
+  
+  resetFilters() {
+    this.loadAllEvents();
+  }
+  
+  
 }

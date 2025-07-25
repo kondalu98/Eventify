@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { CommonModule } from '@angular/common';
@@ -26,7 +26,8 @@ export class EventDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -44,18 +45,19 @@ export class EventDetailComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
-
+  
     const { id: userId, token } = JSON.parse(storedUser);
     const eventId = this.event?.eventID;
     if (!eventId || !userId) return;
-
+  
     const bookingData = { userId, eventId };
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-
+  
     this.http.post<any>('http://localhost:8082/api/tickets/book', bookingData, { headers }).subscribe({
       next: (response) => {
         this.ticketBooked = true;
         this.ticketId = response.ticketId;
+        this.cdr.detectChanges();  // Trigger change detection manually
       },
       error: (err) => {
         console.error('Booking failed', err);

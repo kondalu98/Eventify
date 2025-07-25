@@ -7,11 +7,12 @@ import { EventsComponent } from './event-card/event-card.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { FooterComponent } from './footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet ,CarouselComponent,NavbarComponent,CommonModule,EventsComponent],
+  imports: [RouterOutlet ,CarouselComponent,NavbarComponent,CommonModule,EventsComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

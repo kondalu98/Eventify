@@ -1,36 +1,53 @@
-<div class="mt-6 bg-gray-100 p-4 rounded shadow">
-  <h3 class="text-lg font-semibold mb-2">📝 Submit your Feedback</h3>
+<div class="mt-6 bg-white p-6 rounded shadow max-w-md mx-auto">
+  <h3 class="text-xl font-semibold mb-4 text-gray-800">🌟 Submit Your Feedback</h3>
 
   <form [formGroup]="feedbackForm" (ngSubmit)="submitFeedback()">
-    <!-- Rating -->
-    <label class="block mb-2">
-      Rating (1–5):
-      <input
-        type="number"
-        formControlName="rating"
-        class="w-full px-3 py-2 border rounded"
-        min="1"
-        max="5"
-        required
-      />
-    </label>
+    <!-- Star Rating -->
+    <div class="mb-4">
+      <label class="block mb-1 text-gray-600">Rating:</label>
+      <div class="flex space-x-1">
+        <ng-container *ngFor="let star of [1,2,3,4,5]">
+          <svg
+            (click)="setRating(star)"
+            [ngClass]="{
+              'text-yellow-400': star <= rating,
+              'text-gray-300': star > rating
+            }"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            class="w-8 h-8 cursor-pointer transition-colors duration-200"
+          >
+            <path
+              d="M12 .587l3.668 7.568L24 9.75l-6 5.858 1.417 8.28L12 19.771l-7.417 4.117L6 15.608 0 9.75l8.332-1.595z"
+            />
+          </svg>
+        </ng-container>
+      </div>
+      <div *ngIf="feedbackForm.get('rating')?.invalid && feedbackForm.get('rating')?.touched" class="text-red-500 text-sm mt-1">
+        Please select a rating
+      </div>
+    </div>
 
     <!-- Comment -->
-    <label class="block mb-2">
-      Comment:
+    <div class="mb-4">
+      <label class="block text-gray-600 mb-1">Comment:</label>
       <textarea
         formControlName="comment"
-        class="w-full px-3 py-2 border rounded"
+        class="w-full border px-3 py-2 rounded shadow-sm focus:outline-none focus:ring focus:border-blue-300"
         rows="4"
-        required
+        placeholder="Your feedback..."
       ></textarea>
-    </label>
+      <div *ngIf="feedbackForm.get('comment')?.invalid && feedbackForm.get('comment')?.touched" class="text-red-500 text-sm mt-1">
+        Please enter a valid comment (min 3 characters)
+      </div>
+    </div>
 
     <!-- Submit Button -->
     <button
       type="submit"
       [disabled]="feedbackForm.invalid"
-      class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+      class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full"
     >
       Submit Feedback
     </button>

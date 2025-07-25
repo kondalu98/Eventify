@@ -1,5 +1,33 @@
 <div class="max-w-7xl mx-auto px-4 py-8">
-  <h2 class="text-2xl font-bold mb-6">Recommended Events</h2>
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold">Recommended Events</h2>
+  
+    <div class="flex gap-3 items-center">
+      <!-- 📅 Date Filter -->
+      <input
+  type="date"
+  [(ngModel)]="selectedDate"
+  (change)="onDateChange()"
+  class="border px-3 py-2 rounded"
+/>
+
+  
+      <!-- 🔄 All Button -->
+      <button
+        (click)="resetFilters()"
+        class="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 text-sm"
+      >
+        All
+      </button>
+    </div>
+  </div>
+  
+<!-- ❌ No Events Message -->
+<div *ngIf="events.length === 0" class="text-red-600 text-center font-medium text-lg mb-4">
+  No events found for the selected date.
+</div>
+
+  
 
   <div class="flex gap-6 overflow-x-auto pb-4">
     <div
@@ -24,7 +52,6 @@
           Organizer: <span class="font-semibold">{{ event.organizerID }}</span>
         </div>
 
-        <!-- ⭐ Rating Display -->
         <div class="mt-2 text-sm text-yellow-600 font-medium">
           ⭐ Rating: {{ event.rating || 0 }}/5
         </div>
