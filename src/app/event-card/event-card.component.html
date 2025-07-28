@@ -1,34 +1,41 @@
 <div class="max-w-7xl mx-auto px-4 py-8">
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-2xl font-bold">Recommended Events</h2>
-  
-    <div class="flex gap-3 items-center">
-      <!-- 📅 Date Filter -->
-      <input
-  type="date"
-  [(ngModel)]="selectedDate"
-  (change)="onDateChange()"
-  class="border px-3 py-2 rounded"
-/>
 
-  
-      <!-- 🔄 All Button -->
+    <div class="flex gap-3 items-center">
+      <!-- Location Dropdown -->
+      <select
+        [(ngModel)]="selectedLocation"
+        (change)="onLocationChange()"
+        class="border px-3 py-2 rounded"
+      >
+        <option value="">Select Location</option>
+        <option *ngFor="let loc of availableLocations" [value]="loc">{{ loc }}</option>
+      </select>
+
+      <!-- Date Picker -->
+      <input
+        type="date"
+        [(ngModel)]="selectedDate"
+        (change)="onDateChange()"
+        class="border px-3 py-2 rounded"
+      />
+
+      <!-- Reset Filters -->
       <button
         (click)="resetFilters()"
-        class="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 text-sm"
+        class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 text-sm"
       >
         All
       </button>
     </div>
   </div>
-  
-<!-- ❌ No Events Message -->
-<div *ngIf="events.length === 0" class="text-red-600 text-center font-medium text-lg mb-4">
-  No events found for the selected date.
-</div>
 
-  
+  <div *ngIf="events.length === 0" class="text-red-600 text-center font-medium text-lg mb-4">
+    No events found for the selected filters.
+  </div>
 
+  <!-- Event Cards -->
   <div class="flex gap-6 overflow-x-auto pb-4">
     <div
       *ngFor="let event of events"

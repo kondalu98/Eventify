@@ -1,13 +1,12 @@
-import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-notification',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule,CommonModule],
   templateUrl: './notification.component.html',
 })
 export class NotificationComponent implements OnInit {
@@ -17,6 +16,9 @@ export class NotificationComponent implements OnInit {
 
   users: any[] = [];
   events: any[] = [];
+
+  notificationMessage: string = ''; // For success/error message
+  notificationType: 'success' | 'error' = 'success';
 
   private baseUrl = 'http://localhost:8082/api';
 
@@ -42,19 +44,19 @@ export class NotificationComponent implements OnInit {
   }
 
   goBack() {
-    this.location.back(); // back to previous route
+    this.location.back();
   }
 
   sendNotification() {
     const token = localStorage.getItem('admin-token');
 
     if (!token) {
-      alert('Unauthorized: Admin login required');
+      this.setNotification('Unauthorized: Admin login required', 'error');
       return;
     }
 
     if (!this.eventId || !this.message.trim()) {
-      alert('Event and message are required!');
+      this.setNotification('Event and message are required!', 'error');
       return;
     }
 
@@ -68,17 +70,26 @@ export class NotificationComponent implements OnInit {
         : `${this.baseUrl}/notifications/notification?userId=${this.userId}&eventId=${this.eventId}&message=${encodeURIComponent(this.message)}`;
 
     this.http.post(url, {}, { headers }).subscribe({
-      next: (response) => {
-        console.log('Notification sent:', response);
-        alert('Notification sent successfully!');
+      next: () => {
+        this.setNotification('✅ Notification sent successfully!', 'success');
         this.message = '';
         this.userId = 0;
         this.eventId = 0;
       },
       error: (error) => {
         console.error('Error sending notification', error);
-        alert('Failed to send notification.');
+        this.setNotification('❌ Failed to send notification.', 'error');
       },
     });
+  }
+
+  setNotification(message: string, type: 'success' | 'error') {
+    this.notificationMessage = message;
+    this.notificationType = type;
+
+    // Optional auto-dismiss
+    setTimeout(() => {
+      this.notificationMessage = '';
+    }, 3000);
   }
 }

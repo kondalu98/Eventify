@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, OnDestroy } from '@angular/core';
-import {  CommonModule } from '@angular/common'; // Still needed for structural directives
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 interface CarouselItem {
   imageSrc: string;
@@ -11,61 +11,45 @@ interface CarouselItem {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './carousel.component.html',
-  
 })
 export class CarouselComponent implements OnInit, OnDestroy {
-  
   slides = signal<CarouselItem[]>([
-    {
-      imageSrc: 'assets/slide_1.avif',
-      altText: 'A vibrant abstract image'
-    },
-    {
-      imageSrc: 'assets/slide_2.avif',
-      altText: 'A serene natural landscape'
-    },
-    {
-      imageSrc: 'assets/slide_1.avif',
-      altText: 'Modern architectural design'
-    }
+    { imageSrc: 'assets/slide_1.avif', altText: 'Slide 1' },
+    { imageSrc: 'assets/slide_2.avif', altText: 'Slide 2' },
+    { imageSrc: 'assets/slide_3.avif', altText: 'Slide 3' },
   ]);
-  
 
   currentIndex = signal(0);
   autoplayInterval: any;
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.startAutoplay();
   }
 
-  ngOnDestroy(): void {
-    if (this.autoplayInterval) {
-      clearInterval(this.autoplayInterval);
-    }
+  ngOnDestroy() {
+    clearInterval(this.autoplayInterval);
   }
 
-  setCurrentSlide(index: number): void {
+  setCurrentSlide(index: number) {
     this.currentIndex.set(index);
     this.resetAutoplay();
   }
 
-  nextSlide(): void {
-    this.currentIndex.update(current => (current + 1) % this.slides().length);
+  nextSlide() {
+    this.currentIndex.update(i => (i + 1) % this.slides().length);
     this.resetAutoplay();
   }
 
-  prevSlide(): void {
-    this.currentIndex.update(current => (current - 1 + this.slides().length) % this.slides().length);
+  prevSlide() {
+    this.currentIndex.update(i => (i - 1 + this.slides().length) % this.slides().length);
     this.resetAutoplay();
   }
 
-  startAutoplay(): void {
-    this.autoplayInterval = setInterval(() => {
-      this.nextSlide();
-    }, 5000); // Change slide every 5 seconds
+  startAutoplay() {
+    this.autoplayInterval = setInterval(() => this.nextSlide(), 5000);
   }
 
-  resetAutoplay(): void {
+  resetAutoplay() {
     clearInterval(this.autoplayInterval);
     this.startAutoplay();
   }

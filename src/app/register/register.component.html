@@ -1,6 +1,17 @@
-<app-navbar></app-navbar>
+
 <div class="flex items-center justify-center min-h-screen bg-gray-100 px-4">
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="w-full max-w-md bg-white p-6 rounded-lg shadow space-y-5">
+    <!-- Back Arrow -->
+<div class="flex items-center">
+  <button (click)="goBack()" class="text-indigo-600 hover:text-indigo-800 flex items-center space-x-2">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+         xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+    </svg>
+    <span class="text-sm font-medium">Back</span>
+  </button>
+</div>
+
     <h2 class="text-2xl font-bold text-center text-gray-700">Create Account</h2>
 
     <!-- Name -->

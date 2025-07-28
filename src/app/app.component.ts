@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 
 import { CarouselComponent } from './carousel/carousel.component';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { FooterComponent } from './footer/footer.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet ,CarouselComponent,NavbarComponent,CommonModule,EventsComponent, FooterComponent],
+  imports: [RouterOutlet ,CarouselComponent,NavbarComponent,CommonModule,EventsComponent, FooterComponent,RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -31,7 +31,7 @@ export class AppComponent {
   @ViewChild('eventList') eventList!: EventsComponent;
 
   onLocationSelected(location: string) {
-    this.eventList.loadEventsByLocation(location);
+    this.eventList.loadEvents(undefined, location);
   }
  
   
