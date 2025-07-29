@@ -1,20 +1,20 @@
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import axios from 'axios';
-import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
   selector: 'app-admin',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin.component.html',
-  
+
 })
 export class AdminComponent {
   adminForm: FormGroup;
-  loginError: string | null = null;  // <-- add this
+  loginError: string | null = null;
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.adminForm = this.fb.group({
@@ -27,7 +27,7 @@ export class AdminComponent {
     if (this.adminForm.invalid) return;
 
     const { email, password } = this.adminForm.value;
-    this.loginError = null; // Clear previous errors
+    this.loginError = null;
 
     try {
       const response = await axios.post(
@@ -35,13 +35,11 @@ export class AdminComponent {
       );
 
       const { token } = response.data;
-
-      // Save token and navigate
       localStorage.setItem('admin-token', token);
       this.router.navigate(['/admin/dash']);
 
     } catch (error: any) {
-      console.error('Login error:', error?.response?.data || error);
+      console.error('Login error:', error.response.data);
       this.loginError = 'Invalid username or password.';
     }
   }

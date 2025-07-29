@@ -1,14 +1,22 @@
 <div class="p-6 bg-gray-50 min-h-screen">
-  <!-- Header -->
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-3xl font-bold text-gray-800">🎟️ Ticket Management</h2>
+  <!-- Back Button - Top Left -->
+  <div class="mb-4">
     <button
+      type="button"
       (click)="goBack()"
-      class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md shadow-md transition"
-      aria-label="Go back to previous page"
+      class="text-indigo-600 hover:text-indigo-800 flex items-center space-x-2"
     >
-      ← Go Back
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+           xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+      <span class="text-sm font-medium">Back</span>
     </button>
+  </div>
+
+  <!-- Header Centered -->
+  <div class="flex justify-center items-center mb-6">
+    <h2 class="text-3xl text-center font-bold text-gray-800">🎟️ Ticket Management</h2>
   </div>
 
   <!-- Error Message -->
@@ -45,8 +53,7 @@
           <td class="px-4 py-2 border text-sm">
             <span
               class="inline-block px-3 py-1 rounded-full text-sm font-semibold
-              {{ ticket.status === 'CANCELED' ? 'bg-red-500 text-white' : 'bg-green-500 text-white' }}"
-              >
+              {{ ticket.status === 'CANCELED' ? 'bg-red-500 text-white' : 'bg-green-500 text-white' }}">
               {{ ticket.status }}
             </span>
           </td>

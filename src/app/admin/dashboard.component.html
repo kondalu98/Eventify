@@ -41,59 +41,62 @@
       Add New Event
     </h3>
 
-    <form
-      (ngSubmit)="addEvent()"
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4"
-      novalidate
-    >
-      <input
-        class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
-        type="text"
-        placeholder="Name"
-        [(ngModel)]="newEvent.name"
-        name="name"
-        required
-      />
-      <input
-        class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
-        type="text"
-        placeholder="Category"
-        [(ngModel)]="newEvent.category"
-        name="category"
-        required
-      />
-      <input
-        class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
-        type="text"
-        placeholder="Location"
-        [(ngModel)]="newEvent.location"
-        name="location"
-        required
-      />
-      <input
-        class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
-        type="date"
-        [(ngModel)]="newEvent.date"
-        name="date"
-        required
-      />
-      <input
-        class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
-        type="text"
-        placeholder="Organizer ID"
-        [(ngModel)]="newEvent.organizerID"
-        name="organizerID"
-        required
-      />
+ <form
+  #form="ngForm"
+  (ngSubmit)="addEvent()"
+  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4"
+  novalidate
+>
+  <input
+    class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+    type="text"
+    placeholder="Name"
+    [(ngModel)]="newEvent.name"
+    name="name"
+    required
+  />
+  <input
+    class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+    type="text"
+    placeholder="Category"
+    [(ngModel)]="newEvent.category"
+    name="category"
+    required
+  />
+  <input
+    class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+    type="text"
+    placeholder="Location"
+    [(ngModel)]="newEvent.location"
+    name="location"
+    required
+  />
+  <input
+    class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+    type="date"
+    [(ngModel)]="newEvent.date"
+    name="date"
+    required
+  />
+  <input
+    class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+    type="text"
+    placeholder="Organizer ID"
+    [(ngModel)]="newEvent.organizerID"
+    name="organizerID"
+    required
+    
+  />
 
-      <!-- Submit button spans all columns on small screens -->
-      <button
-        type="submit"
-        class="sm:col-span-2 md:col-span-5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-md transition focus:ring-4 focus:ring-indigo-400"
-      >
-        ➕ Add Event
-      </button>
-    </form>
+  <button
+    type="submit"
+    [disabled]="!form.valid"
+    class="sm:col-span-2 md:col-span-5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-md transition focus:ring-4 focus:ring-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    ➕ Add Event
+  </button>
+</form>
+
   </section>
 
   <!-- Event List -->
