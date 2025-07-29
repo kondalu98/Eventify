@@ -8,7 +8,7 @@ import { NavbarComponent } from "../navbar/navbar.component";
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NavbarComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin.component.html',
   
 })

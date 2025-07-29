@@ -15,7 +15,7 @@ import axios from 'axios';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NavbarComponent, ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
