@@ -1,55 +1,59 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule, Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+
+import { AuthAdminService } from '../auth.admin.service';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-notification',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './notification.component.html',
 })
 export class NotificationComponent implements OnInit {
-  userId: number = 0; 
+  userId: number = 0;
   eventId: number = 0;
   message: string = '';
   users: any[] = [];
   events: any[] = [];
 
-  notificationMessage: string = ''; 
+  notificationMessage: string = '';
   notificationType: 'success' | 'error' = 'success';
 
   private baseUrl = 'http://localhost:8082/api';
 
-  constructor(private http: HttpClient, private location: Location) {}
+  constructor(
+    private http: HttpClient,
+    private location: Location,
+    private authService: AuthAdminService
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
     this.loadEvents();
   }
 
-  loadUsers() {
+  loadUsers(): void {
     this.http.get(`${this.baseUrl}/users/all`).subscribe({
       next: (data: any) => (this.users = data),
       error: (err) => console.error('Error fetching users', err),
     });
   }
 
-  loadEvents() {
+  loadEvents(): void {
     this.http.get(`${this.baseUrl}/events`).subscribe({
       next: (data: any) => (this.events = data),
       error: (err) => console.error('Error fetching events', err),
     });
   }
 
-  goBack() {
+  goBack(): void {
     this.location.back();
   }
 
-  sendNotification() {
-    const token = localStorage.getItem('admin-token');
-
-    if (!token) {
+  sendNotification(): void {
+    if (!this.authService.isLoggedIn()) {
       this.setNotification('Unauthorized: Admin login required', 'error');
       return;
     }
@@ -59,9 +63,7 @@ export class NotificationComponent implements OnInit {
       return;
     }
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
+    const headers = this.authService.getAuthHeaders();
 
     const url =
       this.userId === 0
@@ -82,7 +84,7 @@ export class NotificationComponent implements OnInit {
     });
   }
 
-  setNotification(message: string, type: 'success' | 'error') {
+  setNotification(message: string, type: 'success' | 'error'): void {
     this.notificationMessage = message;
     this.notificationType = type;
     setTimeout(() => {

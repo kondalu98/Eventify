@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import { AuthAdminService } from '../auth.admin.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -31,7 +32,8 @@ export class DashboardComponent implements OnInit {
     organizerID: '',
   };
 
-  constructor(private http: HttpClient, private router: Router) {}
+constructor(private http: HttpClient, private router: Router, private authService: AuthAdminService) {}
+
 
   ngOnInit(): void {
     this.fetchEvents();
@@ -43,13 +45,8 @@ export class DashboardComponent implements OnInit {
       error: (err) => console.error('Error fetching events:', err),
     });
   }
-
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('admin-token');
-    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  }
   addEvent(): void {
-    const headers = this.getAuthHeaders();
+    const headers = this.authService.getAuthHeaders();
     this.http
       .post<Event>('http://localhost:8082/api/events/event', this.newEvent, {
         headers,
@@ -79,7 +76,7 @@ export class DashboardComponent implements OnInit {
 
   updateEvent(): void {
     if (!this.editingEvent || !this.editingEvent.eventID) return;
-    const headers = this.getAuthHeaders();
+const headers = this.authService.getAuthHeaders();
     this.http
       .put<Event>(
         `http://localhost:8082/api/events/event/${this.editingEvent.eventID}`,
@@ -98,7 +95,7 @@ export class DashboardComponent implements OnInit {
   }
 
   deleteEvent(eventID: number): void {
-    const headers = this.getAuthHeaders();
+   const headers = this.authService.getAuthHeaders();
     const url = `http://localhost:8082/api/events/event/${eventID}`;
 
     this.http.delete(url, { headers, responseType: 'text' }).subscribe({
@@ -117,9 +114,10 @@ export class DashboardComponent implements OnInit {
 
 
   logout() {
-    this.router.navigate(['/admin']);
-    localStorage.removeItem('admin-token');
-  }
+  this.authService.logout();
+  this.router.navigate(['/admin']);
+}
+
   onClick() {
     this.router.navigate(['admin/tickets']);
   }
