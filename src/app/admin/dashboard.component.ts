@@ -22,7 +22,7 @@ interface Event {
 })
 export class DashboardComponent implements OnInit {
   events: Event[] = [];
-
+  editingEvent: Event | null = null;
   newEvent: Event = {
     name: '',
     category: '',
@@ -30,8 +30,6 @@ export class DashboardComponent implements OnInit {
     date: '',
     organizerID: '',
   };
-
-  editingEvent: Event | null = null;
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -44,6 +42,11 @@ export class DashboardComponent implements OnInit {
       next: (data) => (this.events = data),
       error: (err) => console.error('Error fetching events:', err),
     });
+  }
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('admin-token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
   addEvent(): void {
     const headers = this.getAuthHeaders();
@@ -66,9 +69,16 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+  startEdit(event: Event): void {
+    this.editingEvent = { ...event };
+  }
+
+  cancelEdit(): void {
+    this.editingEvent = null;
+  }
+
   updateEvent(): void {
     if (!this.editingEvent || !this.editingEvent.eventID) return;
-
     const headers = this.getAuthHeaders();
     this.http
       .put<Event>(
@@ -105,18 +115,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  startEdit(event: Event): void {
-    this.editingEvent = { ...event };
-  }
 
-  cancelEdit(): void {
-    this.editingEvent = null;
-  }
-
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('admin-token');
-    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  }
   logout() {
     this.router.navigate(['/admin']);
     localStorage.removeItem('admin-token');

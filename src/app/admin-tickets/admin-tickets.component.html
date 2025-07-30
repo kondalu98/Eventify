@@ -1,5 +1,4 @@
 <div class="p-6 bg-gray-50 min-h-screen">
-  <!-- Back Button - Top Left -->
   <div class="mb-4">
     <button
       type="button"
@@ -14,17 +13,14 @@
     </button>
   </div>
 
-  <!-- Header Centered -->
   <div class="flex justify-center items-center mb-6">
     <h2 class="text-3xl text-center font-bold text-gray-800">🎟️ Ticket Management</h2>
   </div>
 
-  <!-- Error Message -->
   <div *ngIf="errorMessage" class="text-red-600 font-semibold mb-4">
     {{ errorMessage }}
   </div>
 
-  <!-- No Tickets Message -->
   <div *ngIf="tickets.length === 0 && !errorMessage" class="text-gray-600 text-center">
     No tickets found.
   </div>

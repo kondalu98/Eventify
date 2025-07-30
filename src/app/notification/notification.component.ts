@@ -10,14 +10,13 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './notification.component.html',
 })
 export class NotificationComponent implements OnInit {
-  userId: number = 0; // 0 means all users
+  userId: number = 0; 
   eventId: number = 0;
   message: string = '';
-
   users: any[] = [];
   events: any[] = [];
 
-  notificationMessage: string = ''; // For success/error message
+  notificationMessage: string = ''; 
   notificationType: 'success' | 'error' = 'success';
 
   private baseUrl = 'http://localhost:8082/api';
@@ -86,8 +85,6 @@ export class NotificationComponent implements OnInit {
   setNotification(message: string, type: 'success' | 'error') {
     this.notificationMessage = message;
     this.notificationType = type;
-
-    // Optional auto-dismiss
     setTimeout(() => {
       this.notificationMessage = '';
     }, 3000);
