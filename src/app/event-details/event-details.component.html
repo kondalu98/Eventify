@@ -14,56 +14,86 @@
         Organizer: <span class="font-semibold">{{ event.organizerID }}</span>
       </div>
 
-      <!-- Buttons -->
+      <!-- Book Ticket Button -->
       <button
-        *ngIf="!ticketBooked"
-        (click)="validateTicket()"
-        class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 mr-2"
-      >
-        🎟️ Book Ticket
-      </button>
+  *ngIf="!ticketBooked"
+  (click)="handleBookClick()"
+  class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 mr-2"
+>
+  🎟️ Book Ticket
+</button>
 
+
+      <!-- Confirmation Box -->
+      <div
+        *ngIf="showTicketConfirmation"
+        class="mt-4 border border-blue-300 p-4 rounded bg-blue-50 text-sm"
+      >
+        <h3 class="text-lg font-semibold mb-2 text-blue-800">Confirm Your Ticket</h3>
+        <p><strong>Event:</strong> {{ event.name }}</p>
+        <p><strong>Category:</strong> {{ event.category }}</p>
+        <p><strong>Location:</strong> {{ event.location }}</p>
+        <p><strong>Date:</strong> {{ event.date }}</p>
+        <p><strong>User:</strong> {{ username }}</p>
+
+        <div class="mt-4 flex gap-4">
+          <button
+            (click)="validateTicket()"
+            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
+            ✅ Confirm Ticket
+          </button>
+          <button
+            (click)="showTicketConfirmation = false"
+            class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+          >
+            ❌ Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- Rate Button -->
       <button
         (click)="validateRate()"
-        class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+        class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 mt-4"
       >
         ⭐ Rate Now
       </button>
 
       <!-- Feedback Modal -->
-<div
-*ngIf="showFeedbackForm && userId !== null"
-class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
->
-<div class="relative bg-white rounded-lg shadow-lg max-w-lg w-full mx-4 p-6">
-  <!-- Close Icon -->
-  <button
-    class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-xl"
-    (click)="showFeedbackForm = false"
-    aria-label="Close"
-  >
-    ✖
-  </button>
+      <div
+        *ngIf="showFeedbackForm && userId !== null"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div class="relative bg-white rounded-lg shadow-lg max-w-lg w-full mx-4 p-6">
+          <!-- Close Icon -->
+          <button
+            class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-xl"
+            (click)="showFeedbackForm = false"
+            aria-label="Close"
+          >
+            ✖
+          </button>
 
-  <!-- Feedback Form -->
-  <app-feedback-form
-    [eventId]="event?.eventID"
-    [userId]="userId!"
-    (feedbackSubmitted)="showFeedbackForm = false"
-  ></app-feedback-form>
-</div>
-</div>
-
-    
+          <!-- Feedback Form -->
+          <app-feedback-form
+            [eventId]="event?.eventID"
+            [userId]="userId!"
+            (feedbackSubmitted)="showFeedbackForm = false"
+          ></app-feedback-form>
+        </div>
+      </div>
 
       <!-- Ticket Booked Message -->
       <div *ngIf="ticketBooked" class="mt-4 text-green-700 font-semibold">
-        🎫 Ticket booked successfully! Ticket ID: <span class="text-black">{{ ticketId }}</span>
+        🎫 Ticket booked successfully! Ticket ID:
+        <span class="text-black">{{ ticketId }}</span>
       </div>
 
+      <!-- All Feedbacks -->
       <app-event-feedbacks [eventId]="event.eventID"></app-event-feedbacks>
 
-      <!-- Back and Profile -->
+      <!-- Navigation -->
       <div class="mt-6 flex flex-wrap gap-4">
         <button (click)="goToLocationPage()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
           ⬅️ Back to Location

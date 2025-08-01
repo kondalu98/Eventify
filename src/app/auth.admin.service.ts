@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class AuthAdminService {
   getToken(): string | null {
-    return localStorage.getItem('admin-token');
+    return sessionStorage.getItem('admin-token');
   }
 
   getAuthHeaders(): HttpHeaders {
@@ -21,6 +21,6 @@ export class AuthAdminService {
 }
 
   logout(): void {
-    localStorage.removeItem('admin-token');
+    sessionStorage.removeItem('admin-token');
   }
 }

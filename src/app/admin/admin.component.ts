@@ -35,7 +35,7 @@ export class AdminComponent {
       );
 
       const { token } = response.data;
-      localStorage.setItem('admin-token', token);
+      sessionStorage.setItem('admin-token', token);
       this.router.navigate(['/admin/dash']);
 
     } catch (error: any) {
