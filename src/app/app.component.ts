@@ -4,17 +4,17 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CarouselComponent } from './carousel/carousel.component';
 import { CommonModule } from '@angular/common';
 import { EventsComponent } from './event-card/event-card.component';
+import { FooterComponent } from './footer/footer.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { FooterComponent } from './footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet ,CarouselComponent,NavbarComponent,CommonModule,EventsComponent, FooterComponent,RouterModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+ 
 })
 export class AppComponent {
   title = 'eventify';
@@ -33,9 +33,9 @@ export class AppComponent {
   onLocationSelected(location: string) {
     this.eventList.loadEvents(undefined, location);
   }
- 
-  
 
-  
+
+
+
 
 }
