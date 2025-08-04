@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 
 import { AuthService } from '../auth.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule,Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { Router } from '@angular/router';
@@ -26,7 +26,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private location:Location
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -68,6 +69,6 @@ export class LoginComponent {
     }
   }
   goBack() {
-    this.router.navigate(['/']);
+    this.location.back();
   }
 }

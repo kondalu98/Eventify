@@ -76,9 +76,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  navigateToAdmin() {
-    this.router.navigate(['/admin']);
+  navigateToAdmin(): void {
+    window.open('/admin', '_blank');
   }
+  
 
   goToProfile() {
     this.router.navigate(['/profile']);

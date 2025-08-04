@@ -24,6 +24,7 @@ interface Event {
 export class DashboardComponent implements OnInit {
   events: Event[] = [];
   editingEvent: Event | null = null;
+  successMessage: string = '';
   newEvent: Event = {
     name: '',
     category: '',
@@ -48,9 +49,7 @@ constructor(private http: HttpClient, private router: Router, private authServic
   addEvent(): void {
     const headers = this.authService.getAuthHeaders();
     this.http
-      .post<Event>('http://localhost:8082/api/events/event', this.newEvent, {
-        headers,
-      })
+      .post<Event>('http://localhost:8082/api/events/event', this.newEvent, { headers })
       .subscribe({
         next: (data) => {
           this.events.push(data);
@@ -61,11 +60,18 @@ constructor(private http: HttpClient, private router: Router, private authServic
             date: '',
             organizerID: '',
           };
+          this.successMessage = '✅ Event added successfully!';
+        
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 3000);
         },
-        error: (err) => console.error('Error adding event:', err),
+        error: (err) => {
+          console.error('Error adding event:', err);
+        },
       });
   }
-
+  
   startEdit(event: Event): void {
     this.editingEvent = { ...event };
   }
