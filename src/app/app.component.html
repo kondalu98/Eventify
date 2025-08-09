@@ -1,11 +1,12 @@
-<ng-container *ngIf="isHomeRoute">
-  <app-navbar (locationSelected)="onLocationSelected($event)"
-  
-></app-navbar>
+<!-- Show this layout only for home routes -->
+<ng-container *ngIf="isHomeRoute; else otherRoutes">
+  <app-navbar (locationSelected)="onLocationSelected($event)"></app-navbar>
   <app-carousel></app-carousel>
   <app-events #eventList></app-events>
   <app-footer></app-footer>
 </ng-container>
 
-<router-outlet></router-outlet>
-
+<!-- All other routes (including 404) go here -->
+<ng-template #otherRoutes>
+  <router-outlet></router-outlet>
+</ng-template>

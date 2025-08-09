@@ -36,7 +36,6 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user => this.user = user);
-
     this.http.get<any[]>('http://localhost:8082/api/events').subscribe(events => {
       this.allEvents = events;
       const allLocations = events.map(e => e.location);
@@ -60,7 +59,6 @@ export class NavbarComponent implements OnInit {
       this.searchResults = [];
       return;
     }
-
     this.searchResults = this.allEvents.filter(event =>
       event.name.toLowerCase().includes(query) || event.location.toLowerCase().includes(query)
     );
@@ -90,25 +88,18 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-
-
-
-
-
-  // Notifications
   toggleNotificationDropdown() {
     this.isNotificationDropdownOpen = !this.isNotificationDropdownOpen;
-  
     if (this.isNotificationDropdownOpen) {
-      this.fetchNotifications(); // ✅ No parameter needed
+      this.fetchNotifications();
     }
   }
   
-
 fetchNotifications(): void {
-  const user = this.authService.getUser(); // Get user from service
-  const token = user?.token;
-
+ 
+  const user = this.authService.getCurrentUser();
+  const token = this.authService.getToken();
+ 
   if (!token) {
     console.warn('No token found');
     return;
@@ -124,7 +115,6 @@ fetchNotifications(): void {
     })
     .subscribe({
       next: (data) => {
-        // Sort by sentTimestamp descending and take latest 4
         this.notifications = data
           .sort((a, b) => new Date(b.sentTimestamp).getTime() - new Date(a.sentTimestamp).getTime())
           .slice(0, 4);

@@ -9,12 +9,12 @@ import { NavbarComponent } from "../navbar/navbar.component";
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, NavbarComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.component.html'
 })
 export class RegisterComponent {
   registerForm: FormGroup;
-  serverError: string | null = null;  // 👈 for error messages
+  serverError: string | null = null; 
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.registerForm = this.fb.group({
@@ -28,7 +28,7 @@ export class RegisterComponent {
   async onSubmit(): Promise<void> {
     if (this.registerForm.invalid) return;
 
-    this.serverError = null; // reset before submit
+    this.serverError = null; 
 
     try {
       const response = await axios.post('http://localhost:8082/api/users/register', this.registerForm.value);
@@ -36,12 +36,12 @@ export class RegisterComponent {
     } catch (error: any) {
       console.error('Error during registration:', error);
 
-      // Handle custom backend error message
-      if (error.response && error.response.data && error.response.data.message) {
-        this.serverError = error.response.data.message;
+      if (error.response && error.response.data) {
+        this.serverError = error.response.data; 
       } else {
         this.serverError = 'Registration failed. Please try again.';
       }
+      
     }
   }
   

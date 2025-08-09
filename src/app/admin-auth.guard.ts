@@ -10,8 +10,6 @@ export class AdminAuthGuard implements CanActivate {
   constructor(private router: Router,private authService:AuthAdminService) {}
 
   canActivate(): boolean {
-    const adminToken = sessionStorage.getItem('admin-token');
-
     if (this.authService.isLoggedIn()) {
       return true;
     } else {

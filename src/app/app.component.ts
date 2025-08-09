@@ -19,6 +19,7 @@ import { filter } from 'rxjs/operators';
 export class AppComponent {
   title = 'eventify';
   isHomeRoute = false;
+  
 
   constructor(private router: Router) {
     this.router.events

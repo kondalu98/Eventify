@@ -22,7 +22,9 @@
   </button>
 </div>
 <div *ngIf="event" class="max-w-3xl mx-auto px-4 py-8">
-  <div class="w-full bg-white rounded-lg shadow hover:shadow-lg transition duration-300">
+  <div
+    class="w-full bg-white rounded-lg shadow hover:shadow-lg transition duration-300"
+  >
     <img
       [src]="event.imageUrl || 'assets/event.jpg'"
       alt="event image"
@@ -31,28 +33,30 @@
 
     <div class="p-6">
       <h2 class="text-2xl font-bold mb-2">{{ event.name }}</h2>
-      <p class="text-sm text-gray-500 mb-1">{{ event.category }} | {{ event.location }}</p>
+      <p class="text-sm text-gray-500 mb-1">
+        {{ event.category }} | {{ event.location }}
+      </p>
       <p class="text-sm text-gray-400 mb-2">📅 {{ event.date }}</p>
       <div class="text-sm text-gray-600 mb-4">
         Organizer: <span class="font-semibold">{{ event.organizerID }}</span>
       </div>
 
-      <!-- Book Ticket Button -->
+      
       <button
-  *ngIf="!ticketBooked"
-  (click)="handleBookClick()"
-  class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 mr-2"
->
-  🎟️ Book Ticket
-</button>
+        *ngIf="!ticketBooked"
+        (click)="handleBookClick()"
+        class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 mr-2"
+      >
+        🎟️ Book Ticket
+      </button>
 
-
-      <!-- Confirmation Box -->
       <div
         *ngIf="showTicketConfirmation"
         class="mt-4 border border-blue-300 p-4 rounded bg-blue-50 text-sm"
       >
-        <h3 class="text-lg font-semibold mb-2 text-blue-800">Confirm Your Ticket</h3>
+        <h3 class="text-lg font-semibold mb-2 text-blue-800">
+          Confirm Your Ticket
+        </h3>
         <p><strong>Event:</strong> {{ event.name }}</p>
         <p><strong>Category:</strong> {{ event.category }}</p>
         <p><strong>Location:</strong> {{ event.location }}</p>
@@ -74,8 +78,6 @@
           </button>
         </div>
       </div>
-
-      <!-- Rate Button -->
       <button
         (click)="validateRate()"
         class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 mt-4"
@@ -88,8 +90,9 @@
         *ngIf="showFeedbackForm && userId !== null"
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       >
-        <div class="relative bg-white rounded-lg shadow-lg max-w-lg w-full mx-4 p-6">
-          <!-- Close Icon -->
+        <div
+          class="relative bg-white rounded-lg shadow-lg max-w-lg w-full mx-4 p-6"
+        >
           <button
             class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-xl"
             (click)="showFeedbackForm = false"
@@ -116,12 +119,6 @@
       <!-- All Feedbacks -->
       <app-event-feedbacks [eventId]="event.eventID"></app-event-feedbacks>
 
-      <!-- Navigation -->
-      <div class="mt-6 flex flex-wrap gap-4">
-        <button *ngIf="userId !== null" (click)="goToProfile()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-          👤 Go to Profile
-        </button>
-      </div>
     </div>
   </div>
 </div>

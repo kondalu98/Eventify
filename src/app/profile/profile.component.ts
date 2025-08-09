@@ -1,20 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common'; // ⬅️ Import this
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import axios from 'axios';
+import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './profile.component.html',
 })
 export class ProfileComponent implements OnInit {
@@ -23,11 +17,15 @@ export class ProfileComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
 
-constructor(private fb: FormBuilder, private router: Router, private location: Location) {}
-
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private location: Location,
+    private http: HttpClient
+  ) {}
 
   ngOnInit(): void {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     if (!storedUser) {
       this.router.navigate(['/login']);
       return;
@@ -37,56 +35,49 @@ constructor(private fb: FormBuilder, private router: Router, private location: L
     this.userId = user.id;
 
     this.userForm = this.fb.group({
-  name: [user.name, Validators.required],
-  email: [{ value: user.email, disabled: true }], // ✅ Correctly mark as disabled
-  password: ['', [Validators.required, Validators.minLength(6)]],
-  contactNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-});
-
+      name: [user.name, Validators.required],
+      email: [{ value: user.email, disabled: true }],
+      password: ['', [Validators.required]],
+      contactNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+    });
   }
 
-  async updateProfile() {
+  updateProfile() {
     if (this.userForm.invalid) return;
 
-    const storedUser = localStorage.getItem('user');
-    if (!storedUser) return;
+    const storedUser = sessionStorage.getItem('user');
+    const token = sessionStorage.getItem('token');
 
-    const { token } = JSON.parse(storedUser);
+    if (!storedUser || !token) return;
 
-    try {
-      const response = await axios.put(
-        `http://localhost:8082/api/users/update/${this.userId}`,
-        this.userForm.getRawValue(),
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    const formValues = this.userForm.getRawValue();
+    const url = `http://localhost:8082/api/users/update/${this.userId}`;
 
-      this.successMessage = 'Profile updated successfully!';
-      this.errorMessage = '';
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-      // Update localStorage with new name if needed
-      const updatedUser = JSON.parse(localStorage.getItem('user')!);
-      updatedUser.name = this.userForm.value.name;
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-    } catch (err) {
-      console.error('Update failed', err);
-      this.errorMessage = 'Failed to update profile. Please try again.';
-      this.successMessage = '';
-    }
+    this.http.put(url, formValues, { headers }).subscribe({
+      next: (response: any) => {
+        this.successMessage = 'Profile updated successfully!';
+        this.errorMessage = '';
+
+        const updatedUser = JSON.parse(storedUser);
+        updatedUser.name = this.userForm.value.name;
+        updatedUser.contactNumber = this.userForm.value.contactNumber;
+        sessionStorage.setItem('user', JSON.stringify(updatedUser));
+      },
+      error: (error) => {
+        console.error('Update failed', error);
+        this.errorMessage = 'Failed to update profile. Please try again.';
+        this.successMessage = '';
+      }
+    });
   }
-//   logout() {
-//   localStorage.removeItem('user');
-//   this.router.navigate(['/']);
-// }
-goBack() {
-  this.location.back();
-}
-onclick()
-{
-  this.router.navigate(['/tickets']);
-}
 
+  goBack() {
+    this.location.back();
+  }
+
+  onclick() {
+    this.router.navigate(['/tickets']);
+  }
 }

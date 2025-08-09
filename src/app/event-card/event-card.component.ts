@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -15,30 +14,34 @@ export class EventsComponent implements OnInit {
   events: any[] = [];
   selectedDate: string = '';
   selectedLocation: string = '';
-  availableLocations: string[] = []; // Dropdown values
+  availableLocations: string[] = [];
   imageUrls: string[] = ['assets/ev_1.webp', 'assets/ev_2.jpg', 'assets/ev_3.jpg'];
 
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
     this.fetchLocations();
-    this.loadEvents(); // Load all events initially or based on navbar location param
+    this.loadEvents();
   }
 
-  // Get all unique locations from backend or hardcoded
   fetchLocations() {
     this.http.get<any[]>('http://localhost:8082/api/events').subscribe({
       next: (events) => {
         const allLocations = events.map(event => event.location);
-        this.availableLocations = [...new Set(allLocations)]; // unique values only
+        this.availableLocations = [...new Set(allLocations)];
       },
       error: () => {
-        // fallback static locations
-        this.availableLocations = ['hyd', 'delhi', 'bangalore'];
+        this.availableLocations = [''];
       }
     });
   }
-  
+
+  assignImages(events: any[]) {
+    return events.map((event, index) => ({
+      ...event,
+      imageUrl: event.imageUrl || this.imageUrls[index % this.imageUrls.length],
+    }));
+  }
 
   loadEvents(date?: string, location?: string) {
     let url = 'http://localhost:8082/api/events';
@@ -59,7 +62,9 @@ export class EventsComponent implements OnInit {
         }
 
         const eventsWithImages = this.assignImages(events);
-        this.loadRatings(eventsWithImages);
+        this.events = eventsWithImages;
+
+        this.loadRatingsIndividually();
       },
       error: (err) => {
         this.events = [];
@@ -68,23 +73,17 @@ export class EventsComponent implements OnInit {
     });
   }
 
-  assignImages(events: any[]) {
-    return events.map((event, index) => ({
-      ...event,
-      imageUrl: event.imageUrl || this.imageUrls[index % this.imageUrls.length],
-    }));
-  }
-
-  loadRatings(events: any[]) {
-    const ratingRequests = events.map(event =>
+  loadRatingsIndividually() {
+    this.events.forEach((event, index) => {
       this.http.get<number>(`http://localhost:8082/api/feedback/event-rating/${event.eventID}`)
-    );
-
-    forkJoin(ratingRequests).subscribe(ratings => {
-      this.events = events.map((event, index) => ({
-        ...event,
-        rating: ratings[index] ?? 0
-      }));
+        .subscribe({
+          next: (rating) => {
+            this.events[index].rating = rating ?? 0; 
+          },
+          error: () => {
+            this.events[index].rating = 0;
+          }
+        });
     });
   }
 

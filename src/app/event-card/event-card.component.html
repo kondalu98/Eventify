@@ -3,7 +3,6 @@
     <h2 class="text-2xl font-bold">Recommended Events</h2>
 
     <div class="flex gap-3 items-center">
-      <!-- Location Dropdown -->
       <select
         [(ngModel)]="selectedLocation"
         (change)="onLocationChange()"
@@ -12,16 +11,12 @@
         <option value="">Select Location</option>
         <option *ngFor="let loc of availableLocations" [value]="loc">{{ loc }}</option>
       </select>
-
-      <!-- Date Picker -->
       <input
         type="date"
         [(ngModel)]="selectedDate"
         (change)="onDateChange()"
         class="border px-3 py-2 rounded"
       />
-
-      <!-- Reset Filters -->
       <button
         (click)="resetFilters()"
         class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 text-sm"
@@ -51,8 +46,11 @@
       <div class="p-4">
         <h3 class="text-lg font-semibold truncate">{{ event.name }}</h3>
         <p class="text-sm text-gray-500">
-          {{ event.category }} | {{ event.location }}
+          {{ event.category }}
         </p>
+
+        <p class="text-sm text-gray-400 mt-1">📍 {{ event.location }}</p>
+
         <p class="text-sm text-gray-400 mt-1">📅 {{ event.date }}</p>
 
         <div class="mt-2 text-xs text-gray-600">

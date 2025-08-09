@@ -7,6 +7,7 @@ import { EventFeedbacksComponent } from '../event-feedbacks/event-feedbacks.comp
 import { FeedbackFormComponent } from '../feedback/feedback.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-event-detail',
@@ -23,12 +24,14 @@ export class EventDetailComponent implements OnInit {
 
   userId: number | null = null;
   username: string = '';
+  
 
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
     private location: Location,
+    private authService:AuthService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -40,7 +43,7 @@ export class EventDetailComponent implements OnInit {
       });
     }
 
-    const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     if (storedUser) {
       const parsed = JSON.parse(storedUser);
       this.userId = parsed.id;
@@ -48,7 +51,7 @@ export class EventDetailComponent implements OnInit {
     }
   }
   handleBookClick() {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     if (!storedUser) {
       this.router.navigate(['/login']);
     } else {
@@ -57,51 +60,67 @@ export class EventDetailComponent implements OnInit {
   }
   
 
+
+
   validateTicket() {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     if (!storedUser) {
+      alert('You must be logged in to book a ticket.');
       this.router.navigate(['/login']);
       return;
     }
-
-    const { id: userId, token } = JSON.parse(storedUser);
+  
+    const { id: userId } = JSON.parse(storedUser);
+    const token = this.authService.getToken(); 
+  
     const eventId = this.event?.eventID;
-    if (!eventId || !userId) return;
-
+    if (!eventId || !userId || !token) {
+      alert('Invalid booking details.');
+      return;
+    }
+  
     const bookingData = { userId, eventId };
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+    console.log('Booking Data:', bookingData);
+    console.log('Auth Header:', headers.get('Authorization'));
+  
     this.http.post<any>('http://localhost:8082/api/tickets/book', bookingData, { headers }).subscribe({
       next: (response) => {
         this.ticketBooked = true;
         this.ticketId = response.ticketId;
         this.showTicketConfirmation = false;
         this.cdr.detectChanges();
+        alert('Ticket booked successfully!');
       },
       error: (err) => {
-        console.error('Booking failed', err);
-        alert('❌ Booking failed. Please try again.');
+        console.error('Booking failed:', err);
+        if (err.status === 401) {
+          alert('Unauthorized. Please log in again.');
+          this.router.navigate(['/login']);
+        } else {
+          alert('Booking failed. Please try again later.');
+        }
       },
     });
   }
+  
 
   validateRate() {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     if (!storedUser) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/login']); 
       return;
     }
-
-    const { id } = JSON.parse(storedUser);
-    this.userId = id;
-    this.showFeedbackForm = true;
+  
+    const { id: userId } = JSON.parse(storedUser);
+    this.userId = userId;
+    this.showFeedbackForm = true; 
   }
+  
 
   goToLocationPage() {
     this.location.back();
-  }
-
-  goToProfile() {
-    this.router.navigate(['/profile']);
   }
 }

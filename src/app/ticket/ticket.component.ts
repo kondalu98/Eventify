@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
+
 @Component({
   selector: 'app-tickets',
   standalone: true,
@@ -15,18 +16,20 @@ export class TicketsComponent implements OnInit {
   token!: string;
   userId!: number;
 
-  constructor(private http: HttpClient, private router: Router,private location: Location) {}
+  constructor(private http: HttpClient, private router: Router, private location: Location) {}
 
   ngOnInit(): void {
-    const storedUser = localStorage.getItem('user');
-    if (!storedUser) {
+    const storedUser = sessionStorage.getItem('user');
+    const token = sessionStorage.getItem('token');
+
+    if (!storedUser || !token) {
       this.router.navigate(['/login']);
       return;
     }
 
     const user = JSON.parse(storedUser);
     this.userId = user.id;
-    this.token = user.token;
+    this.token = token;
 
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
 
@@ -57,6 +60,6 @@ export class TicketsComponent implements OnInit {
   }
 
   goBack(): void {
-    this.location.back(); // Or home page
+    this.location.back();
   }
 }

@@ -28,7 +28,6 @@ export class EventFeedbacksComponent implements OnInit {
     this.loading = true;
     this.http.get<any[]>(`http://localhost:8082/api/feedback/event/${this.eventId}`).subscribe({
       next: (data) => {
-        // Sort by timestamp (most recent first), then take top 3
         this.feedbacks = data
           .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
           .slice(0, 3);

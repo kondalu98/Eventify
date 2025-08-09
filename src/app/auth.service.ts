@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -7,35 +8,33 @@ export class AuthService {
   user$ = this.userSubject.asObservable();
 
   constructor() {
-    const user = localStorage.getItem('user');
+    const user = sessionStorage.getItem('user');
     if (user) {
       this.userSubject.next(JSON.parse(user));
     }
   }
 
   setUser(user: any) {
-    user.id = Number(user.id); // ✅ ensure it's a number before storing
+    user.id = Number(user.id); 
     this.userSubject.next(user);
-    localStorage.setItem('user', JSON.stringify(user));
+    sessionStorage.setItem('user', JSON.stringify(user));
   }
-  getUser() {
-  const userStr = localStorage.getItem('user'); // assuming user is stored in localStorage
-  return userStr ? JSON.parse(userStr) : null;
-}
 
   login(response: any) {
-    localStorage.setItem('token', response.token);
-    localStorage.setItem('user', JSON.stringify({
-      id: +response.id, // Convert string to number
-      name: response.name,
-      email: response.email
-    }));
+    const { id, name, email, token } = response;
+    const user = {
+      id: Number(id), 
+      name,
+      email,
+    };
+    this.setUser(user);
+    this.setToken(token);
   }
-
+  
 
   updateUser(updatedUser: any) {
     this.userSubject.next(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
+    sessionStorage.setItem('user', JSON.stringify(updatedUser));
   }
 
   getCurrentUser() {
@@ -44,19 +43,20 @@ export class AuthService {
 
   logout() {
     this.userSubject.next(null);
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
   }
 
   setToken(token: string) {
-    localStorage.setItem('token', token);
+    sessionStorage.setItem('token', token);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return sessionStorage.getItem('token');
   }
 
   isLoggedIn(): boolean {
-    return !!this.userSubject.getValue();
+    return Boolean(this.userSubject.getValue());
   }
+  
 }
